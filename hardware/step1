@@ -1,0 +1,137 @@
+int s1, s2, s3, s4, s5=0;
+
+void setup() 
+{//Serial.begin(9600);
+
+ 
+
+  pinMode(8, OUTPUT);
+  pinMode(1, OUTPUT);
+
+  pinMode(7, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(4, OUTPUT);
+  
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+
+  digitalWrite(8, HIGH); 
+  digitalWrite(1, HIGH);  
+}
+
+
+void loop() 
+{
+follow();
+
+ 
+  delay(50);
+}
+
+
+void fwd(void)
+{
+  halt();
+  digitalWrite(4, HIGH); 
+  digitalWrite(7, HIGH);
+
+  
+}
+
+void halt(void)
+{
+  digitalWrite(4, LOW); 
+  digitalWrite(5, LOW); 
+  digitalWrite(6, LOW); 
+  digitalWrite(7, LOW);
+}
+
+void left(void)
+{
+  halt();
+  digitalWrite(5, HIGH); 
+  digitalWrite(7, HIGH);
+ 
+}
+
+void right(void)
+{
+  halt();
+  digitalWrite(6, HIGH); 
+  digitalWrite(4, HIGH);
+
+}
+
+void back(void)
+{
+  halt();
+  digitalWrite(6, HIGH); 
+  digitalWrite(5, HIGH);
+  
+}
+
+void follow(void)
+{
+ 
+   halt();
+  
+  s1 = digitalRead(A1); //leftmost
+  s2 = digitalRead(A2); //**left
+  s3 = digitalRead(A3); //center
+  s4 = digitalRead(A4); //**right
+  s5 = digitalRead(A5); //right most
+
+
+  if(s5==0)
+  {
+  halt();
+  //delay(1000);
+  right();
+  delay(500);
+  } 
+
+  else if(s1==0)
+  {
+  halt();
+  //delay(1000);
+  left();
+  delay(500);
+  } 
+
+  else if(s2==0 && s4==1)
+  {
+    halt();
+    left();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==0)
+  {
+    halt();
+    right();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==1)
+  {
+    halt();
+    fwd();
+    delay(1);
+    //halt();  
+  }
+ 
+  else
+  {
+    halt();
+  }
+}
+
+ 
+
+  

@@ -1,0 +1,241 @@
+int s1, s2, s3, s4, s5=0;
+
+int arr[4]={1,0,0,0};
+int count=0;
+
+
+void setup() 
+{Serial.begin(9600);
+
+ 
+
+  pinMode(8, OUTPUT);
+  pinMode(1, OUTPUT);
+
+  pinMode(7, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(4, OUTPUT);
+  
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+
+  digitalWrite(8, HIGH); 
+  digitalWrite(1, HIGH);  
+}
+
+
+void loop() 
+{
+//follow();
+
+halt();
+  
+  s1 = digitalRead(A1); //leftmost
+  s2 = digitalRead(A2); //**left
+  s3 = digitalRead(A3); //center
+  s4 = digitalRead(A4); //**right
+  s5 = digitalRead(A5); //right most
+
+
+ 
+
+   if(s1==0) //Left  //T junction
+  {
+    halt();
+    if(arr[count]==1)
+    {
+      halt();
+      //delay(1000);
+      left();
+      delay(500);
+    } 
+    count++;
+    Serial.print(count);
+  } 
+
+   else if(s5==0)   //Right //T junction
+  {
+    halt();
+    if(arr[count]==0)
+    {
+      halt();
+      //delay(1000); 
+      if(count==1){
+        delay(5000);
+         right();
+
+          
+      }
+      else if(arr[count]==0){
+         if(count==2){
+        delay(5000);
+         right();
+        }
+
+    }else{
+        right();
+      }
+     
+      delay(500);
+      }
+     count++;
+     Serial.print(count);
+  } 
+
+  else if(s2==0 && s4==1)
+  {
+    halt();
+    left();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==0)
+  {
+    halt();
+    right();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==1)
+  {
+    halt();
+    fwd();
+    delay(1);
+    //halt();  
+  }
+ 
+  else
+  {
+    halt();
+  }
+
+ 
+  delay(50);
+
+
+if(count>4){
+  halt2();
+}
+
+  
+}
+
+
+void fwd(void)
+{
+  halt();
+  digitalWrite(4, HIGH); 
+  digitalWrite(7, HIGH);
+
+  
+}
+
+void halt(void)
+{
+  digitalWrite(4, LOW); 
+  digitalWrite(5, LOW); 
+  digitalWrite(6, LOW); 
+  digitalWrite(7, LOW);
+}
+
+
+void halt2(void)
+{
+  digitalWrite(4, LOW); 
+  digitalWrite(5, LOW); 
+  digitalWrite(6, LOW); 
+  digitalWrite(7, LOW);
+  delay(100000);
+}
+
+void left(void)
+{
+  halt();
+  digitalWrite(5, HIGH); 
+  digitalWrite(7, HIGH);
+ 
+}
+
+void right(void)
+{
+  halt();
+  digitalWrite(6, HIGH); 
+  digitalWrite(4, HIGH);
+
+}
+
+void back(void)
+{
+  halt();
+  digitalWrite(6, HIGH); 
+  digitalWrite(5, HIGH);
+  
+}
+
+void follow(void)
+{
+ 
+   halt();
+  
+  s1 = digitalRead(A1); //leftmost
+  s2 = digitalRead(A2); //**left
+  s3 = digitalRead(A3); //center
+  s4 = digitalRead(A4); //**right
+  s5 = digitalRead(A5); //right most
+
+
+  if(s5==0)
+  {
+  halt();
+  //delay(1000); //T junction
+  right();
+  delay(500);
+  } 
+
+  else if(s1==0) //T junction
+  {
+  halt();
+  //delay(1000);
+  left();
+  delay(500);
+  } 
+
+  else if(s2==0 && s4==1)
+  {
+    halt();
+    left();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==0)
+  {
+    halt();
+    right();
+    delay(1);
+    //halt();  
+  }
+
+  else if(s2==1 && s4==1)
+  {
+    halt();
+    fwd();
+    delay(1);
+    //halt();  
+  }
+ 
+  else
+  {
+    halt();
+  }
+}
+
+ 
+
+  

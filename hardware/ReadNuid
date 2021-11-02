@@ -1,0 +1,105 @@
+
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+ 
+MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
+
+MFRC522::MIFARE_Key key; 
+
+byte nuidPICC[4];// Init array that will store new NUID 
+
+void setup() 
+{ 
+  Serial.begin(9600);
+  SPI.begin(); // Init SPI bus
+  rfid.PCD_Init(); // Init MFRC522 
+
+  for (byte i = 0; i < 6; i++) 
+  {
+    key.keyByte[i] = 0xFF;
+  }
+
+}
+ 
+void loop() {
+
+  // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+  if ( ! rfid.PICC_IsNewCardPresent())
+    return;
+
+  // Verify if the NUID has been readed
+  if ( ! rfid.PICC_ReadCardSerial())
+    return;
+
+  //Serial.print(F("PICC type: "));
+  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+  //Serial.println(rfid.PICC_GetTypeName(piccType));
+
+  // Check is the PICC of Classic MIFARE type
+  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
+    piccType != MFRC522::PICC_TYPE_MIFARE_1K &&
+    piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
+    Serial.println(F("Your tag is not of type MIFARE Classic."));
+    return;
+  }
+
+  if (1) 
+  {
+    //Serial.println(F("A new card has been detected."));
+
+    // Store NUID into nuidPICC array
+    for (byte i = 0; i < 4; i++) {
+      nuidPICC[i] = rfid.uid.uidByte[i];
+    }
+  
+    if(nuidPICC[0]==9 && nuidPICC[1]==239 && nuidPICC[2]==89 && nuidPICC[3]==185)
+    Serial.println("Location 1");
+
+    if(nuidPICC[0]==199 && nuidPICC[1]==19 && nuidPICC[2]==87 && nuidPICC[3]==98)
+    Serial.println("Location 2");
+
+    if(nuidPICC[0]==71 && nuidPICC[1]==14 && nuidPICC[2]==124 && nuidPICC[3]==98)
+    Serial.println("Location 3");
+
+    if(nuidPICC[0]==215 && nuidPICC[1]==89 && nuidPICC[2]==91 && nuidPICC[3]==98)
+    Serial.println("Location 4");
+
+    if(nuidPICC[0]==215 && nuidPICC[1]==13 && nuidPICC[2]==114 && nuidPICC[3]==98)
+    Serial.println("Location 5");
+
+    if(nuidPICC[0]==39 && nuidPICC[1]==73 && nuidPICC[2]==125 && nuidPICC[3]==98)
+    Serial.println("Location 6");
+
+    if(nuidPICC[0]==151 && nuidPICC[1]==251 && nuidPICC[2]==85 && nuidPICC[3]==98)
+    Serial.println("Location 7");
+
+    if(nuidPICC[0]==167 && nuidPICC[1]==202 && nuidPICC[2]==110 && nuidPICC[3]==98)
+    Serial.println("Location 8");
+
+    if(nuidPICC[0]==183 && nuidPICC[1]==40 && nuidPICC[2]==97 && nuidPICC[3]==98)
+    Serial.println("Location 9");
+
+    if(nuidPICC[0]==183 && nuidPICC[1]==160 && nuidPICC[2]==122 && nuidPICC[3]==98)
+    Serial.println("Location 10");
+
+    if(nuidPICC[0]==55 && nuidPICC[1]==186 && nuidPICC[2]==123 && nuidPICC[3]==98)
+    Serial.println("Location 11");
+
+    if(nuidPICC[0]==231 && nuidPICC[1]==33 && nuidPICC[2]==115 && nuidPICC[3]==98)
+    Serial.println("Location 12");
+
+    if(nuidPICC[0]==201 && nuidPICC[1]==145 && nuidPICC[2]==64 && nuidPICC[3]==153)
+    Serial.println("Location 13");
+    
+  }
+  
+
+  
+  rfid.PICC_HaltA();
+
+  
+  rfid.PCD_StopCrypto1();
+}
